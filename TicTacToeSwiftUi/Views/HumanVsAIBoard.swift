@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct HumanVsAIBoard: View {
-    
     @StateObject var viewModel = GameViewModel()
     
     var body: some View {
@@ -22,9 +21,9 @@ struct HumanVsAIBoard: View {
                 
                 HStack {
                     Spacer()
-                    Text("Human : \(viewModel.humanScore)")
+                    Text("Human : \(viewModel.ownScore)")
                     Spacer()
-                    Text("Computer : \(viewModel.computerScore)")
+                    Text("Computer : \(viewModel.oponentScore)")
                     Spacer()
                 }
                 Spacer()
@@ -34,25 +33,22 @@ struct HumanVsAIBoard: View {
                             Circle()
                                 .foregroundColor(.red)
                                 .opacity(0.8)
-                                .frame(width: geometry.size.width/3 - 15, height: geometry.size.width/3 - 15)
+                                .frame(width: max(geometry.size.width/3 - 15, 0), height: max(geometry.size.width/3 - 15, 0))
                             Button(action: {
                                 viewModel.processPlayerMove(at: i)
                             }, label: {
                                 Image(systemName: viewModel.moves[i]?.markingImage ?? "")
                                     .renderingMode(.original)
                                     .resizable()
-                                    .frame(width: (geometry.size.width/3 - 15)*0.4, height: (geometry.size.width/3 - 15)*0.4)
+                                    .frame(width: max((geometry.size.width/3 - 15)*0.4, 0), height: max((geometry.size.width/3 - 15)*0.4, 0))
                             })
                         }
                     }
                 }
                 Spacer()
-                Button (action: {
+                Button("Reset Game") {
                     viewModel.resetGame()
-                }, label: {
-                    ButtonView(text: "Reset Game", textColour: .primary, backgroundColour: .red)
-                        .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
-                })
+                }.buttonStyle(GrowingButton())
                 Spacer()
                 
             }
@@ -76,32 +72,8 @@ enum Player {
     case computer
 }
 
-struct Move {
-    var player: Player
-    var boardIndex: Int
-    
-    var markingImage: String {
-        return player == .human ? "circle": "xmark"
-    }
-}
-
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         HumanVsAIBoard()
-    }
-}
-
-struct ButtonView: View {
-    var text: String
-    var textColour: Color
-    var backgroundColour: Color
-    
-    var body: some View {
-        Text(text)
-            .font(.system(size: 20, weight: .bold, design: .default))
-            .frame(width: 200, height: 50)
-            .foregroundColor(textColour)
-            .background(backgroundColour)
-            .cornerRadius(5)
     }
 }

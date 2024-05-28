@@ -16,6 +16,7 @@ struct HomeView: View {
                 Text("Tic Tac Toe")
                     .font(.system(size: 30, weight: .heavy, design: .serif))
                     .italic()
+                    .padding()
                 Button("Real-Time multiplayer") {
                     navPath.append(1)
                 }
@@ -26,8 +27,10 @@ struct HomeView: View {
                 .buttonStyle(GrowingButton())
                 Spacer()
             }.navigationDestination(for: Int.self) { id in
-                if id == 1 {
+                if id == 2 {
                     HumanVsAIBoard()
+                } else {
+                    OnlineGameBoard()
                 }
                 
             }

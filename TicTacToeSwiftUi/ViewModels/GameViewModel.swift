@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-final class GameViewModel: ObservableObject {
+class GameViewModel: NSObject, ObservableObject {
     
     let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
@@ -16,14 +16,14 @@ final class GameViewModel: ObservableObject {
     @Published var isDisabled = false
     @Published var alertVariable: Alerts?
     
-    @Published var humanScore: Int = 0
-    @Published var computerScore: Int = 0
+    @Published var ownScore: Int = 0
+    @Published var oponentScore: Int = 0
     
     func processPlayerMove(at position: Int) {
         if !isMoveAlreadyOccupied(moves: moves, for: position) {
             moves[position] = Move(player: .human, boardIndex: position)
             if checkWinCondition(for: moves, player: .human) {
-                humanScore += 1
+                ownScore += 1
                 alertVariable = AlertContexts.humanWin
                 return
             }
@@ -36,7 +36,7 @@ final class GameViewModel: ObservableObject {
                 let computerMoveIndex = getComputerMove(for: moves)
                 moves[computerMoveIndex] = Move(player: .computer, boardIndex: computerMoveIndex)
                 if checkWinCondition(for: moves, player: .computer) {
-                    computerScore += 1
+                    oponentScore += 1
                     alertVariable = AlertContexts.computerWin
                     return
                 }
