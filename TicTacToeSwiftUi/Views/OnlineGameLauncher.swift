@@ -9,7 +9,7 @@ import SwiftUI
 
 enum GameLaunchOptions: Int {
     case match_with_random_player = 0
-    case match_with_ai = 1
+    case join_room_and_play = 1
     case go_home = 2
     case canceled_game_init = 3
 }
@@ -51,7 +51,7 @@ struct OnlineGameLauncher: View {
             .buttonStyle(GrowingButton())
             Button("Join Room And Play") {
                 isGameStarting = true
-                onSelectingOption(GameLaunchOptions.match_with_ai)
+                onSelectingOption(GameLaunchOptions.join_room_and_play)
             }
             .buttonStyle(GrowingButton())
             Button("Go Home") {

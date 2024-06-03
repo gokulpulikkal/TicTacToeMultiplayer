@@ -15,10 +15,16 @@ struct OnlineGameBoard: View {
             ZStack {
                 gameBoard(geometry)
                 OnlineGameLauncher(onSelectingOption: { selectedOption in
-                    print("selected option \(selectedOption)")
-                    if selectedOption == GameLaunchOptions.go_home {
-//                        navPath.removeLast(navPath.count)
+                    
+                    switch selectedOption {
+                    case .join_room_and_play:
+                        print("Join room and play")
+                    case .match_with_random_player:
+                        viewModel.connectToWebSocket()
+                    case .go_home:
                         presentationMode.wrappedValue.dismiss()
+                    case .canceled_game_init:
+                        print("Cancel the game init")
                     }
                 })
             }
