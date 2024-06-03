@@ -13,19 +13,65 @@ class OnlineGameBoardViewModel: NSObject, ObservableObject {
     private var webSocket : URLSessionWebSocketTask?
     
     let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-    
+    @Published var isGameStarted: Bool = false
     @Published var wins: Int = 0
     @Published var loss: Int = 0
     @Published var alertVariable: Alerts?
     @Published var isDisabled = false
     @Published var moves: [Move?] = Array(repeating: nil, count: 9)
+    private var homeSymbol: String?
     
     func processPlayerMove(at position: Int) {
-        
+        if !isMoveAlreadyOccupied(moves: moves, for: position) {
+            moves[position] = Move(player: .homePlayer, boardIndex: position, isOnlineGame: true, homePlayerImage: homeSymbol)
+            sendPlayerMove(at: position)
+        }
     }
     
     func resetGame() {
         moves = Array(repeating: nil, count: 9)
+        let resetGameMessage = """
+        {
+            "type": "reset_game"
+        }
+        """
+        send(resetGameMessage)
+    }
+    
+    func isMoveAlreadyOccupied(moves: [Move?], for index: Int) -> Bool {
+        return index < moves.count && moves[index] != nil
+    }
+    
+    func positionToRowCol(position: Int) -> (row: Int, col: Int)? {
+        guard position >= 0 && position <= 8 else {
+            return nil
+        }
+        
+        let row = position / 3
+        let col = position % 3
+        return (row, col)
+    }
+    
+    private func updateTheLocalBoard(_ board: [[String]]) {
+        var newBoard = [Move?]()
+        var index = 0
+        for i in 0 ..< 3 {
+            for j in 0 ..< 3 {
+                if board[i][j] != "" {
+                    var player = Player.opponent
+                    if homeSymbol == MarkingImage.XMARK.rawValue && board[i][j] == "X" || homeSymbol == MarkingImage.CIRCLE.rawValue && board[i][j] == "O" {
+                        player = Player.homePlayer
+                    }
+                    
+                    let move = Move(player: player, boardIndex: index, isOnlineGame: true, homePlayerImage: homeSymbol)
+                    newBoard.append(move)
+                    index += 1
+                } else {
+                    newBoard.append(nil)
+                }
+            }
+        }
+        moves = newBoard
     }
     
     
@@ -51,20 +97,89 @@ class OnlineGameBoardViewModel: NSObject, ObservableObject {
             "type": "init_game"
         }
         """
+        send(initGameMessage)
+    }
+    
+    func sendPlayerMove(at position: Int) {
+        if let (row, col) = positionToRowCol(position: position) {
+            let pos = Position(row: row, col: col)
+            let moveRequest = MoveRequest(type: "move", move: pos)
+            
+            let encoder = JSONEncoder()
+            do {
+                let jsonData = try encoder.encode(moveRequest)
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    send(jsonString)
+                }
+            } catch {
+                print("Error encoding JSON: \(error)")
+            }
+        }
+    }
+    
+    func resetWebSocket() {
+        
+    }
+    
+    func handleIncomingMessage(_ strMessage: String) {
+        // Parse JSON string
+        guard let jsonData = strMessage.data(using: .utf8) else {
+            print("Failed to convert string to data")
+            return
+        }
+        let decoder = JSONDecoder()
+        do {
+            let response = try decoder.decode(ServerResponse.self, from: jsonData)
+            DispatchQueue.main.async {
+                switch response {
+                case .initGame(let payload):
+                    print("Init Game: Symbol - \(payload.symbol), Is Your Turn - \(payload.isYourTurn)")
+                    self.isDisabled = !payload.isYourTurn
+                    if payload.symbol == "X" {
+                        self.homeSymbol = MarkingImage.XMARK.rawValue
+                    } else {
+                        self.homeSymbol = MarkingImage.CIRCLE.rawValue
+                    }
+                    self.isGameStarted = true
+                case .move(let payload):
+                    if let board = payload.board {
+                        print("Move: Board - \(board), Is Your Turn - \(payload.isYourTurn)")
+                        self.updateTheLocalBoard(board)
+                    }
+                    self.isDisabled = !payload.isYourTurn
+                case .gameOver(let payload):
+                    if let board = payload.board {
+                        print("Move: Board - \(board)")
+                        self.updateTheLocalBoard(board)
+                    }
+                    if let winner = payload.winner {
+                        print("Move: Winner - \(winner)")
+                        if self.homeSymbol == MarkingImage.XMARK.rawValue && winner == "X" || self.homeSymbol == MarkingImage.CIRCLE.rawValue && winner == "O" {
+                            self.wins += 1
+                            self.alertVariable = AlertContexts.homeWin
+                        } else {
+                            self.loss += 1
+                            self.alertVariable = AlertContexts.opponentWin
+                        }
+                    }
+                }
+            }
+            
+        } catch {
+            print("Error parsing JSON: \(error)")
+        }
+    }
+    
+    func send(_ message: String) {
         let workItem = DispatchWorkItem {
-            let message = URLSessionWebSocketTask.Message.string(initGameMessage)
-            self.webSocket?.send(message) { error in
+            let messageTask = URLSessionWebSocketTask.Message.string(message)
+            self.webSocket?.send(messageTask) { error in
                 if let error = error {
                     print(error)
                 }
             }
         }
-
         DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: workItem)
-    }
-    
-    func sendPlayerMove() {
-        
     }
     
     //MARK: Receive
@@ -95,65 +210,6 @@ class OnlineGameBoardViewModel: NSObject, ObservableObject {
         }
         DispatchQueue.global().asyncAfter(deadline: .now() + 1 , execute: workItem)
     }
-    
-    func handleIncomingMessage(_ strMessage: String) {
-        // Parse JSON string
-        guard let jsonData = strMessage.data(using: .utf8) else {
-            print("Failed to convert string to data")
-            return
-        }
-
-        do {
-            let jsonObject = try JSONSerialization.jsonObject(with: jsonData, options: [])
-            guard let jsonDict = jsonObject as? [String: Any] else {
-                print("Failed to convert JSON object to dictionary")
-                return
-            }
-
-            guard let type = jsonDict["type"] as? String else {
-                print("Type is missing in received message")
-                return
-            }
-
-            switch type {
-            case "move":
-                guard let payload = jsonDict["payload"] as? [String: Any] else {
-                    print("Payload is missing or not of expected format")
-                    return
-                }
-                guard let board = payload["board"] as? [[String]] else {
-                    print("Board is missing or not of expected format")
-                    return
-                }
-                // Now you have the board array, you can process it further
-                print("Received move message:")
-                print(board)
-
-            case "game_over":
-                guard let payload = jsonDict["payload"] as? [String: Any] else {
-                    print("Payload is missing or not of expected format")
-                    return
-                }
-                guard let winner = payload["winner"] as? String else {
-                    print("Winner is missing or not of expected format")
-                    return
-                }
-                // Now you have the winner, you can handle the game over event
-                print("Game over. Winner: \(winner)")
-
-            default:
-                print("Unsupported message type: \(type)")
-            }
-
-        } catch {
-            print("Error parsing JSON: \(error)")
-        }
-    }
-
-    
-    func resetWebSocket() {
-        
-    }
 }
 
 extension OnlineGameBoardViewModel: URLSessionWebSocketDelegate {
@@ -167,3 +223,4 @@ extension OnlineGameBoardViewModel: URLSessionWebSocketDelegate {
         print("Disconnect from Server \(reason)")
     }
 }
+

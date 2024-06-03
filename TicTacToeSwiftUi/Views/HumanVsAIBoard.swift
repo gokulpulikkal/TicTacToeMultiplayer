@@ -67,11 +67,6 @@ struct HumanVsAIBoard: View {
     
 }
 
-enum Player {
-    case human
-    case computer
-}
-
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         HumanVsAIBoard()

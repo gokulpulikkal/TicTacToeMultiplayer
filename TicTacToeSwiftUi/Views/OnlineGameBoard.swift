@@ -14,19 +14,21 @@ struct OnlineGameBoard: View {
         GeometryReader { (geometry) in
             ZStack {
                 gameBoard(geometry)
-                OnlineGameLauncher(onSelectingOption: { selectedOption in
-                    
-                    switch selectedOption {
-                    case .join_room_and_play:
-                        print("Join room and play")
-                    case .match_with_random_player:
-                        viewModel.connectToWebSocket()
-                    case .go_home:
-                        presentationMode.wrappedValue.dismiss()
-                    case .canceled_game_init:
-                        print("Cancel the game init")
-                    }
-                })
+                if !viewModel.isGameStarted {
+                    OnlineGameLauncher(onSelectingOption: { selectedOption in
+                        
+                        switch selectedOption {
+                        case .join_room_and_play:
+                            print("Join room and play")
+                        case .match_with_random_player:
+                            viewModel.connectToWebSocket()
+                        case .go_home:
+                            presentationMode.wrappedValue.dismiss()
+                        case .canceled_game_init:
+                            print("Cancel the game init")
+                        }
+                    })
+                }
             }
         }
         .navigationBarHidden(true)
@@ -77,8 +79,12 @@ struct OnlineGameBoard: View {
         .alert(item: $viewModel.alertVariable) { (alertVariable) -> Alert in
             Alert(title: alertVariable.title,
                   message: alertVariable.message,
-                  dismissButton: .default(alertVariable.buttonText, action: {
-                viewModel.resetGame()
+                  primaryButton: .default(alertVariable.buttonText, action: {
+                    viewModel.resetGame()
+                    viewModel.alertVariable = nil
+            }),
+                  secondaryButton: .default(Text("Cancel"), action: {
+                    viewModel.alertVariable = nil
             }))
         }
     }

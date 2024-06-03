@@ -20,4 +20,7 @@ struct AlertContexts {
     static var humanWin = Alerts(title: Text("You won The game"), message: Text("You Beat your own AI"), buttonText: Text("Hell yeah"))
     static var computerWin = Alerts(title: Text("You Lost The game"), message: Text("You Made a badass AI"), buttonText: Text("Rematch"))
     static var drawCase = Alerts(title: Text("Draw!!"), message: Text("Ohh What a battle"), buttonText: Text("Try Again"))
+    
+    static var homeWin = Alerts(title: Text("You won The game"), message: Text("You Beat your opponent"), buttonText: Text("Hell yeah!! Play again"))
+    static var opponentWin = Alerts(title: Text("You Lost The game"), message: Text("Don't you worry it was a tight match"), buttonText: Text("Rematch"))
 }
