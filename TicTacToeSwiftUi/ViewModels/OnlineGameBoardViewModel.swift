@@ -83,7 +83,7 @@ class OnlineGameBoardViewModel: NSObject, ObservableObject {
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
         
         //Server API
-        let url = URL(string:  "ws://localhost:8080")
+        let url = URL(string:  "wss://tictactoegamewebsocketbackend.onrender.com")
         
         //Socket
         webSocket = session.webSocketTask(with: url!)

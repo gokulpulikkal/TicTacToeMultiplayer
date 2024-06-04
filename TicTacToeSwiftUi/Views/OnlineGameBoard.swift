@@ -19,7 +19,7 @@ struct OnlineGameBoard: View {
             ZStack {
                 gameBoard(geometry)
                     .allowsHitTesting(!viewModel.isDisabled)
-                if !viewModel.isDisabled {
+                if viewModel.isDisabled {
                     loadingIndicator()
                 }
                 homeButton()
