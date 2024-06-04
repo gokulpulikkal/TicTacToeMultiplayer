@@ -10,10 +10,17 @@ import SwiftUI
 struct OnlineGameBoard: View {
     @StateObject var viewModel = OnlineGameBoardViewModel()
     @Environment(\.presentationMode) var presentationMode
+    @State var showHomePopup: Bool = false
+    
     var body: some View {
         GeometryReader { (geometry) in
             ZStack {
                 gameBoard(geometry)
+                    .allowsHitTesting(!viewModel.isDisabled)
+                homeButton()
+                if showHomePopup {
+                    homePopupDialog()
+                }
                 if !viewModel.isGameStarted {
                     OnlineGameLauncher(onSelectingOption: { selectedOption in
                         
@@ -32,6 +39,44 @@ struct OnlineGameBoard: View {
             }
         }
         .navigationBarHidden(true)
+    }
+    
+    func homeButton() -> some View {
+        HStack {
+            VStack {
+                Button {
+                    showHomePopup.toggle()
+                } label: {
+                    Image(systemName: "house.fill")
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 35)
+                        .tint(.red)
+                        .opacity(0.8)
+                }
+                Spacer()
+            }
+            .padding([.leading])
+            Spacer()
+                
+        }
+    }
+    
+    func homePopupDialog() -> some View {
+        CustomDialogPopup(
+            title: "You Really wanna go Home?",
+            subTitle: "Your current match will be terminated!",
+            buttons: [
+                DialogButton(title: "cancel", action: {
+                    showHomePopup.toggle()
+                }),
+                DialogButton(title: "Go Home", action: {
+                    presentationMode.wrappedValue.dismiss()
+                })
+            ],
+            buttonAxis: .horizontal
+        )
     }
     
     func gameBoard(_ geometry: GeometryProxy) -> some View {
@@ -74,7 +119,6 @@ struct OnlineGameBoard: View {
             Spacer()
             
         }
-        .disabled(viewModel.isDisabled)
         .padding()
         .alert(item: $viewModel.alertVariable) { (alertVariable) -> Alert in
             Alert(title: alertVariable.title,
@@ -85,6 +129,7 @@ struct OnlineGameBoard: View {
             }),
                   secondaryButton: .default(Text("Cancel"), action: {
                     viewModel.alertVariable = nil
+                    presentationMode.wrappedValue.dismiss()
             }))
         }
     }

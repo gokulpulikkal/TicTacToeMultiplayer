@@ -11,6 +11,7 @@
 		4B166FF22C0E304A00DDFBE2 /* ServerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B166FF12C0E304A00DDFBE2 /* ServerResponse.swift */; };
 		4B166FF42C0E3C8300DDFBE2 /* MoveRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B166FF32C0E3C8300DDFBE2 /* MoveRequest.swift */; };
 		4B166FF62C0E3CA100DDFBE2 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B166FF52C0E3CA100DDFBE2 /* Position.swift */; };
+		4B166FF82C0E761F00DDFBE2 /* CustomDialogPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B166FF72C0E761F00DDFBE2 /* CustomDialogPopup.swift */; };
 		4B9246DE2C044E29004DCB9A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B9246DD2C044E29004DCB9A /* Launch Screen.storyboard */; };
 		4B9246E02C04511C004DCB9A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9246DF2C04511C004DCB9A /* HomeView.swift */; };
 		4B9246E32C04F805004DCB9A /* GrowingButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9246E22C04F805004DCB9A /* GrowingButtonStyle.swift */; };
@@ -50,6 +51,7 @@
 		4B166FF12C0E304A00DDFBE2 /* ServerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerResponse.swift; sourceTree = "<group>"; };
 		4B166FF32C0E3C8300DDFBE2 /* MoveRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveRequest.swift; sourceTree = "<group>"; };
 		4B166FF52C0E3CA100DDFBE2 /* Position.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
+		4B166FF72C0E761F00DDFBE2 /* CustomDialogPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDialogPopup.swift; sourceTree = "<group>"; };
 		4B9246DD2C044E29004DCB9A /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		4B9246DF2C04511C004DCB9A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		4B9246E22C04F805004DCB9A /* GrowingButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowingButtonStyle.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 				55E633B02699BD8700614A06 /* HumanVsAIBoard.swift */,
 				55E633DC269A1A5800614A06 /* Alert.swift */,
 				4B9246EF2C055DA7004DCB9A /* OnlineGameLauncher.swift */,
+				4B166FF72C0E761F00DDFBE2 /* CustomDialogPopup.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -340,6 +343,7 @@
 				55E633DD269A1A5800614A06 /* Alert.swift in Sources */,
 				55E633B12699BD8700614A06 /* HumanVsAIBoard.swift in Sources */,
 				4B9246E02C04511C004DCB9A /* HomeView.swift in Sources */,
+				4B166FF82C0E761F00DDFBE2 /* CustomDialogPopup.swift in Sources */,
 				55E633AF2699BD8700614A06 /* TicTacToeSwiftUiApp.swift in Sources */,
 				4B9246F02C055DA7004DCB9A /* OnlineGameLauncher.swift in Sources */,
 				4B9246E32C04F805004DCB9A /* GrowingButtonStyle.swift in Sources */,
