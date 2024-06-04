@@ -43,9 +43,10 @@ struct HumanVsAIBoard: View {
                                     viewModel.processPlayerMove(at: i)
                                 }, label: {
                                     Image(systemName: viewModel.moves[i]?.markingImage ?? "")
-                                        .renderingMode(.original)
+                                        .renderingMode(.template)
                                         .resizable()
                                         .frame(width: max((geometry.size.width/3 - 15)*0.4, 0), height: max((geometry.size.width/3 - 15)*0.4, 0))
+                                        .tint(.black)
                                 })
                             }
                         }

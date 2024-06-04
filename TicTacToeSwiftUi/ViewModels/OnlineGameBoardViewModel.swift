@@ -180,7 +180,7 @@ class OnlineGameBoardViewModel: NSObject, ObservableObject {
                 }
             }
         }
-        DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: workItem)
+        DispatchQueue.global().asyncAfter(deadline: .now(), execute: workItem)
     }
     
     //MARK: Receive
@@ -209,7 +209,7 @@ class OnlineGameBoardViewModel: NSObject, ObservableObject {
                 self?.receive()
             })
         }
-        DispatchQueue.global().asyncAfter(deadline: .now() + 1 , execute: workItem)
+        DispatchQueue.global().asyncAfter(deadline: .now(), execute: workItem)
     }
 }
 
