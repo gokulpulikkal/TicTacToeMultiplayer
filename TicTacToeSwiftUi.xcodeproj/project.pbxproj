@@ -12,6 +12,7 @@
 		4B166FF42C0E3C8300DDFBE2 /* MoveRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B166FF32C0E3C8300DDFBE2 /* MoveRequest.swift */; };
 		4B166FF62C0E3CA100DDFBE2 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B166FF52C0E3CA100DDFBE2 /* Position.swift */; };
 		4B166FF82C0E761F00DDFBE2 /* CustomDialogPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B166FF72C0E761F00DDFBE2 /* CustomDialogPopup.swift */; };
+		4B166FFB2C0EB1DD00DDFBE2 /* SwiftfulLoadingIndicators in Frameworks */ = {isa = PBXBuildFile; productRef = 4B166FFA2C0EB1DD00DDFBE2 /* SwiftfulLoadingIndicators */; };
 		4B9246DE2C044E29004DCB9A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B9246DD2C044E29004DCB9A /* Launch Screen.storyboard */; };
 		4B9246E02C04511C004DCB9A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9246DF2C04511C004DCB9A /* HomeView.swift */; };
 		4B9246E32C04F805004DCB9A /* GrowingButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9246E22C04F805004DCB9A /* GrowingButtonStyle.swift */; };
@@ -80,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B166FFB2C0EB1DD00DDFBE2 /* SwiftfulLoadingIndicators in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,6 +222,9 @@
 			dependencies = (
 			);
 			name = TicTacToeSwiftUi;
+			packageProductDependencies = (
+				4B166FFA2C0EB1DD00DDFBE2 /* SwiftfulLoadingIndicators */,
+			);
 			productName = TicTacToeSwiftUi;
 			productReference = 55E633AB2699BD8700614A06 /* TicTacToeSwiftUi.app */;
 			productType = "com.apple.product-type.application";
@@ -292,6 +297,9 @@
 				Base,
 			);
 			mainGroup = 55E633A22699BD8700614A06;
+			packageReferences = (
+				4B166FF92C0EB1DD00DDFBE2 /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */,
+			);
 			productRefGroup = 55E633AC2699BD8700614A06 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -671,6 +679,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4B166FF92C0EB1DD00DDFBE2 /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftfulThinking/SwiftfulLoadingIndicators.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4B166FFA2C0EB1DD00DDFBE2 /* SwiftfulLoadingIndicators */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B166FF92C0EB1DD00DDFBE2 /* XCRemoteSwiftPackageReference "SwiftfulLoadingIndicators" */;
+			productName = SwiftfulLoadingIndicators;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 55E633A32699BD8700614A06 /* Project object */;
 }

@@ -11,11 +11,13 @@ struct HumanVsAIBoard: View {
     @StateObject var viewModel = GameViewModel()
     @State var showHomePopup: Bool = false
     @Environment(\.presentationMode) var presentationMode
+    @State var showResetPopup: Bool = false
     
     var body: some View {
         GeometryReader { (geometry) in
             ZStack{
                 homeButton()
+                resetButton()
                 VStack (alignment: .center, spacing: 20) {
                     Spacer()
                     Text("Tic Tac Toe")
@@ -49,11 +51,7 @@ struct HumanVsAIBoard: View {
                         }
                     }
                     Spacer()
-                    Button("Reset Game") {
-                        viewModel.resetGame()
-                    }.buttonStyle(GrowingButton())
                     Spacer()
-                    
                 }
                 .allowsHitTesting(!viewModel.isDisabled)
                 .padding()
@@ -66,6 +64,9 @@ struct HumanVsAIBoard: View {
                 }
                 if showHomePopup {
                     homePopupDialog()
+                }
+                if showResetPopup {
+                    resetPopupDialog()
                 }
             }
             .navigationBarHidden(true)
@@ -90,6 +91,44 @@ struct HumanVsAIBoard: View {
             .padding([.leading])
             Spacer()
                 
+        }
+    }
+    
+    func resetPopupDialog() -> some View {
+        CustomDialogPopup(
+            title: "You wanna reset?",
+            subTitle: "Your current match progress will be lost",
+            buttons: [
+                DialogButton(title: "cancel", action: {
+                    showResetPopup.toggle()
+                }),
+                DialogButton(title: "Reset", action: {
+                    viewModel.resetGame()
+                    showResetPopup.toggle()
+                })
+            ],
+            buttonAxis: .horizontal
+        )
+    }
+    
+    func resetButton() -> some View {
+        HStack {
+            Spacer()
+            VStack {
+                Button {
+                    showResetPopup.toggle()
+                } label: {
+                    Image(systemName: "arrow.uturn.left.circle.fill")
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 32)
+                        .tint(.red)
+                        .opacity(0.8)
+                }
+                Spacer()
+            }
+            .padding([.trailing])
         }
     }
     

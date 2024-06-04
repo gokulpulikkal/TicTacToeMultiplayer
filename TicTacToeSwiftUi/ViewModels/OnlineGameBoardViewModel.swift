@@ -25,6 +25,7 @@ class OnlineGameBoardViewModel: NSObject, ObservableObject {
         if !isMoveAlreadyOccupied(moves: moves, for: position) {
             moves[position] = Move(player: .homePlayer, boardIndex: position, isOnlineGame: true, homePlayerImage: homeSymbol)
             sendPlayerMove(at: position)
+            isDisabled = true
         }
     }
     

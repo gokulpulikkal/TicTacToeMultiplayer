@@ -6,18 +6,27 @@
 //
 
 import SwiftUI
+import SwiftfulLoadingIndicators
 
 struct OnlineGameBoard: View {
     @StateObject var viewModel = OnlineGameBoardViewModel()
     @Environment(\.presentationMode) var presentationMode
     @State var showHomePopup: Bool = false
+    @State var showResetPopup: Bool = false
     
     var body: some View {
         GeometryReader { (geometry) in
             ZStack {
                 gameBoard(geometry)
                     .allowsHitTesting(!viewModel.isDisabled)
+                if !viewModel.isDisabled {
+                    loadingIndicator()
+                }
                 homeButton()
+                resetButton()
+                if showResetPopup {
+                    resetPopupDialog()
+                }
                 if showHomePopup {
                     homePopupDialog()
                 }
@@ -39,6 +48,20 @@ struct OnlineGameBoard: View {
             }
         }
         .navigationBarHidden(true)
+    }
+    
+    func loadingIndicator() -> some View {
+        ZStack {
+            VStack(spacing: -20) {
+                Spacer()
+                LoadingIndicator(color: .red, size: .large)
+                    .opacity(0.8)
+                Text("Opponent's turn")
+                    .bold()
+                    .font(.title2)
+                    .padding([.bottom], 50)
+            }
+        }.ignoresSafeArea()
     }
     
     func homeButton() -> some View {
@@ -63,6 +86,27 @@ struct OnlineGameBoard: View {
         }
     }
     
+    func resetButton() -> some View {
+        HStack {
+            Spacer()
+            VStack {
+                Button {
+                    showResetPopup.toggle()
+                } label: {
+                    Image(systemName: "arrow.uturn.left.circle.fill")
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 32)
+                        .tint(.red)
+                        .opacity(0.8)
+                }
+                Spacer()
+            }
+            .padding([.trailing])
+        }
+    }
+    
     func homePopupDialog() -> some View {
         CustomDialogPopup(
             title: "You Really wanna go Home?",
@@ -73,6 +117,23 @@ struct OnlineGameBoard: View {
                 }),
                 DialogButton(title: "Go Home", action: {
                     presentationMode.wrappedValue.dismiss()
+                })
+            ],
+            buttonAxis: .horizontal
+        )
+    }
+    
+    func resetPopupDialog() -> some View {
+        CustomDialogPopup(
+            title: "You wanna reset?",
+            subTitle: "Your current match progress will be lost",
+            buttons: [
+                DialogButton(title: "cancel", action: {
+                    showResetPopup.toggle()
+                }),
+                DialogButton(title: "Reset", action: {
+                    viewModel.resetGame()
+                    showResetPopup.toggle()
                 })
             ],
             buttonAxis: .horizontal
@@ -113,9 +174,6 @@ struct OnlineGameBoard: View {
                 }
             }
             Spacer()
-            Button("Reset Game") {
-                viewModel.resetGame()
-            }.buttonStyle(GrowingButton())
             Spacer()
             
         }
