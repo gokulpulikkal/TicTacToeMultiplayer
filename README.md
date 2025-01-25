@@ -1,4 +1,4 @@
-# TicTacToeMultiplayer - Using WebSocket
+# TicTacToeMultiplayer - Online
 This engaging iOS TicTacToe game supports both online multiplayer and local offline play. The game features intuitive and dynamic user interfaces to enhance player interaction and immersion.
 
 ## Features
